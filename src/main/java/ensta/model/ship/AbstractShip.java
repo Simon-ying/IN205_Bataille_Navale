@@ -14,6 +14,9 @@ public abstract class AbstractShip {
 		this.o = o;
 	}
 	
+	/*
+	 * mutateur pour l'orientation
+	 */
 	public void setOrientation(Orientation o) {
 		this.o = o;
 	}
