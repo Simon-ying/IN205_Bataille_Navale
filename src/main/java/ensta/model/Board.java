@@ -137,31 +137,80 @@ public class Board implements IBoard {
 	}
 	
 	/*
-	 * non implementer
+	 * a implementer
+	 * coordonnee
+	 * --y
+	 * |
+	 * x
+	 * 
+	 * coords = end of boat
 	 */
+	
 	@Override
 	public boolean putShip(AbstractShip ship, Coords coords) {
-		// TODO Auto-generated method stub
-		return false;
+		if (hasShip(ship, coords)) return false;
+		else {
+			for (int isize=0; isize<ship.getLength(); isize++) {
+				switch (ship.getOrientation()) {
+				case NORTH:
+				case SOUTH:
+					this.navires[coords.getX() + ship.getOrientation().getIncrement()*isize][coords.getY()] 
+							= ship.getLable();
+					break;
+				default:
+					this.navires[coords.getX()][coords.getY() + ship.getOrientation().getIncrement()*isize] 
+							= ship.getLable();
+				}
+				
+			}
+			return true;
+		}
 	}
 	@Override
 	public boolean hasShip(Coords coords) {
-		// TODO Auto-generated method stub
+		return (this.navires[coords.getX()][coords.getY()] != '.' && 
+				coords.getX() < this.size &&
+				coords.getY() < this.size &&
+				coords.getX() >= 0 &&
+				coords.getY() >= 0);
+	}
+	
+	public boolean hasShip(AbstractShip ship, Coords coords) {
+		for (int isize=0; isize<ship.getLength(); isize++) {
+			Coords temp = new Coords(coords);
+			switch (ship.getOrientation()) {
+			case NORTH:
+			case SOUTH:
+				temp.setX(temp.getX()+ship.getOrientation().getIncrement()*isize);
+				break;
+			default:
+				temp.setY(temp.getY()+ship.getOrientation().getIncrement()*isize);
+			}
+			if (this.hasShip(temp)) return true;
+		}
 		return false;
 	}
 	@Override
 	public void setHit(boolean hit, Coords coords) {
-		// TODO Auto-generated method stub
-		
+		this.frappes[coords.getX()][coords.getY()] = hit;		
 	}
 	@Override
 	public Boolean getHit(Coords coords) {
-		// TODO Auto-generated method stub
-		return false;
+		return this.frappes[coords.getX()][coords.getY()];
 	}
 	@Override
 	public Hit sendHit(Coords res) {
-		// TODO Auto-generated method stub
-		return null;
+		switch (this.navires[res.getX()][res.getY()]) {
+			case 'B':
+				return Hit.fromInt(4);
+			case 'C':
+				return Hit.fromInt(5);
+			case 'D':
+				return Hit.fromInt(2);
+			case 'S':
+				return Hit.fromInt(3);
+			default:
+				return Hit.fromInt(-1);
+		}
 	}
 }
