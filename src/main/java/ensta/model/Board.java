@@ -168,11 +168,12 @@ public class Board implements IBoard {
 	}
 	@Override
 	public boolean hasShip(Coords coords) {
-		return (this.navires[coords.getX()][coords.getY()] != '.' && 
-				coords.getX() < this.size &&
+		if (!(coords.getX() < this.size &&
 				coords.getY() < this.size &&
 				coords.getX() >= 0 &&
-				coords.getY() >= 0);
+				coords.getY() >= 0)) return true;
+		else
+			return (this.navires[coords.getX()][coords.getY()] != '.');
 	}
 	
 	public boolean hasShip(AbstractShip ship, Coords coords) {

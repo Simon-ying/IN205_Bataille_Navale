@@ -44,9 +44,24 @@ public class Player {
 			System.out.println(msg);
 			InputHelper.ShipInput res = InputHelper.readShipInput();
 			// TODO set ship orientation
+			switch (res.orientation) {
+			case "north":
+				ship.setOrientation(Orientation.NORTH);
+				break;
+			case "south":
+				ship.setOrientation(Orientation.SOUTH);
+				break;
+			case "east":
+				ship.setOrientation(Orientation.EAST);
+				break;
+			case "west":
+				ship.setOrientation(Orientation.WEST);
+			}
 			// TODO put ship at given position
 			// TODO when ship placement successful
-			++i;
+			boolean suc = this.board.putShip(ship, new Coords(res.x, res.y));
+			if (suc) i++;
+			else System.out.println("Can not put ship here!");
 			done = i == 5;
 
 			board.print();
