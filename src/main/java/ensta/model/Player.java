@@ -21,7 +21,7 @@ public class Player {
 	 * ** Constructeur
 	 */
 	public Player(Board board, Board opponentBoard, List<AbstractShip> ships) {
-		this.setBoard(board);
+		this.board = board;
 		this.ships = ships.toArray(new AbstractShip[0]);
 		this.opponentBoard = opponentBoard;
 	}
@@ -77,9 +77,12 @@ public class Player {
 			System.out.println("où frapper?");
 			InputHelper.CoordInput hitInput = InputHelper.readCoordInput();
 			// TODO call sendHit on this.opponentBoard
-
+			coords.setCoords(new Coords(hitInput.x, hitInput.y));
+			hit = this.opponentBoard.sendHit(coords);
 			// TODO : Game expects sendHit to return BOTH hit result & hit coords.
 			// return hit is obvious. But how to return coords at the same time ?
+			this.opponentBoard.setHit(hit, coords);
+			done = true;
 		} while (!done);
 
 		return hit;
@@ -94,12 +97,9 @@ public class Player {
 	}
 
 	public Board getBoard() {
-		return board;
+		return this.board;
 	}
 
-	public void setBoard(Board board) {
-		this.board = board;
-	}
 
 	public int getDestroyedCount() {
 		return destroyedCount;

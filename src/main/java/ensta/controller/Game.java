@@ -2,15 +2,16 @@ package ensta.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import ensta.ai.PlayerAI;
 import ensta.model.Board;
 import ensta.model.Coords;
 import ensta.model.Hit;
 import ensta.model.Player;
-import ensta.model.ship.AbstractShip;
 /*
 import ensta.model.ship.BattleShip;
 import ensta.model.ship.Carrier;
@@ -18,7 +19,7 @@ import ensta.model.ship.Destroyer;
 import ensta.model.ship.Submarine;
 */
 import ensta.util.ColorUtil;
-
+import ensta.model.ship.*;
 public class Game {
 	/*
 	 * *** Constante
@@ -30,6 +31,9 @@ public class Game {
 	 */
 	private Player player1;
 	private Player player2;
+	private boolean isNultiplayer;
+//	private List<AbstractShip> ships1 = new ArrayList<>();
+//	private List<AbstractShip> ships2 = new ArrayList<>();
 	private Scanner sin;
 
 	/*
@@ -38,15 +42,27 @@ public class Game {
 	public Game() {
 	}
 
-	public Game init() {
+	public Game init() throws Exception {
 		if (!loadSave()) {
-
-
 			// TODO init boards
-
+			Board b1 = new Board("player 1");
+			Board b2 = new Board("player 2");
+//			ships1.add(new Destroyer());
+//			ships1.add(new Submarine());
+//			ships1.add(new Submarine());
+//			ships1.add(new Battleship());
+//			ships1.add(new Carrier());
+//			ships2.add(new Destroyer());
+//			ships2.add(new Submarine());
+//			ships2.add(new Submarine());
+//			ships2.add(new Battleship());
+//			ships2.add(new Carrier());
 			// TODO init this.player1 & this.player2
-
+			this.player1 = new Player(b1, b2, createDefaultShips());
+			this.player2 = new PlayerAI(b2, b1, createDefaultShips());
 			// TODO place player ships
+			this.player2.putShips();
+			this.player1.putShips();
 		}
 		return this;
 	}
@@ -57,25 +73,27 @@ public class Game {
 	public void run() throws Exception {
 		Coords coords = new Coords();
 		Board b1 = player1.getBoard();
+		Board b2 = player2.getBoard();
 		Hit hit;
 
 		// main loop
 		b1.print();
 		boolean done;
 		do {
-			hit = Hit.MISS; // TODO player1 send a hit
+			hit = player1.sendHit(coords); // TODO player1 send a hit
 			boolean strike = hit != Hit.MISS; // TODO set this hit on his board (b1)
-
+			b2.setHit(hit, coords);
+			b2.print(true);
 			done = updateScore();
-			b1.print();
+			
 			System.out.println(makeHitMessage(false /* outgoing hit */, coords, hit));
 
 			// save();
 
 			if (!done && !strike) {
 				do {
-					hit = Hit.MISS; // TODO player2 send a hit.
-
+					hit = player2.sendHit(coords); // TODO player2 send a hit.
+					b1.setHit(hit, coords);
 					strike = hit != Hit.MISS;
 					if (strike) {
 						b1.print();
@@ -88,25 +106,20 @@ public class Game {
 					}
 				} while (strike && !done);
 			}
-
+			b1.print();
 		} while (!done);
 
 		SAVE_FILE.delete();
 		System.out.println(String.format("joueur %d gagne", player1.isLose() ? 2 : 1));
-		sin.close();
-	}
-
-	private boolean updateScore() {
-		// TODO Auto-generated method stub
-		return false;
+//		sin.close();
 	}
 
 	private void save() {
 //		try {
 //			// TODO bonus 2 : uncomment
-//			// if (!SAVE_FILE.exists()) {
-//			// SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
-//			// }
+//			 if (!SAVE_FILE.exists()) {
+//			 SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
+//			 }
 //
 //			// TODO bonus 2 : serialize players
 //
@@ -127,7 +140,7 @@ public class Game {
 //		}
 		return false;
 	}
-	/*
+	
 	private boolean updateScore() {
 		for (Player player : new Player[] { player1, player2 }) {
 			int destroyed = 0;
@@ -145,7 +158,7 @@ public class Game {
 		}
 		return false;
 	}
-	*/
+	
 
 	private String makeHitMessage(boolean incoming, Coords coords, Hit hit) {
 		String msg;
@@ -162,14 +175,14 @@ public class Game {
 			msg = hit.toString() + " coulé";
 			color = ColorUtil.Color.RED;
 		}
-		msg = String.format("%s Frappe en %c%d : %s", incoming ? "<=" : "=>", ((char) ('A' + coords.getX())),
-				(coords.getY() + 1), msg);
+		msg = String.format("%s Frappe en %c%d : %s", incoming ? "<=" : "=>", ((char) ('A' + coords.getY())),
+				(coords.getX() + 1), msg);
 		return ColorUtil.colorize(msg, color);
 	}
-	/*
+	
 	private static List<AbstractShip> createDefaultShips() {
-		return Arrays.asList(new AbstractShip[] { new Destroyer(), new Submarine(), new Submarine(), new BattleShip(),
+		return Arrays.asList(new AbstractShip[] { new Destroyer(), new Submarine(), new Submarine(), new Battleship(),
 				new Carrier() });
 	}
-	*/
+	
 }

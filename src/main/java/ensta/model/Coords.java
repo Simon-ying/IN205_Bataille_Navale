@@ -47,5 +47,9 @@ public class Coords {
 		return (x<size && x>=0 && y<size && y>=0);
 	}
 	
+	public String toString() {
+		return "(" + x + "," + y + ")";
+	}
+	
 	
 }

@@ -27,6 +27,8 @@ public class Board implements IBoard {
 		return size;
 	}
 	
+	public Coords lastHit;
+	
 	ShipState[][] navires;
 	Hit[][] frappes; 
 	
@@ -136,6 +138,73 @@ public class Board implements IBoard {
 			i++;
 		}
 		System.out.println();
+	}
+	
+	public void print(boolean cache) throws Exception {
+		if (cache) {
+			System.out.print("Navires: " + genSpace(5+2*size-"Navires: ".length()) + "Frappes: ");
+			System.out.println();
+			char c = 'A';
+			int spaces = 0;
+			System.out.print(genSpace(3));
+			spaces += 3;
+			for (int icol=0; icol<size; icol++) {
+				System.out.print(c++ + genSpace(1));
+				spaces += 2;
+			}
+			// reset c = 'A'
+			c = 'A';
+			System.out.print(genSpace(5+2*size-spaces+3));
+			for (int icol=0; icol<size; icol++) {
+				System.out.print(c++ + genSpace(1));
+			}
+			
+			System.out.println();
+			
+			
+			int i = 1;
+			for (int irow=0; irow<size; irow++) {
+				spaces = 0;
+				System.out.print(i +((irow>8?genSpace(1):genSpace(2))));
+				spaces += 3;
+				for (int icol=0; icol<size; icol++) {
+					if (frappes[irow][icol]==null) {
+						System.out.print("*"+genSpace(1));
+					}
+					else if (navires[irow][icol].getShip()==null) {
+						System.out.print("."+genSpace(1));
+					}
+					else if (navires[irow][icol].getShip()!=null && navires[irow][icol].getEnd()){
+						System.out.print(ColorUtil.colorize(navires[irow][icol].getShip().getLable(), ColorUtil.Color.YELLOW)+genSpace(1));
+					}
+					else if (navires[irow][icol].getShip()!=null && navires[irow][icol].getShip().isSunk()){
+						System.out.print(ColorUtil.colorize(navires[irow][icol].getShip().getLable(), ColorUtil.Color.RED)+genSpace(1));
+					}
+					else {
+						System.out.print(navires[irow][icol].getShip().getLable()+genSpace(1));
+					}
+					spaces += 2;
+				}
+				System.out.print(genSpace(5+2*size-spaces) + i +((irow>8?genSpace(1):genSpace(2))));
+				for (int icol=0; icol<size; icol++) {
+					if (frappes[irow][icol]==null) {
+						System.out.print("."+genSpace(1));
+					}
+					else if (frappes[irow][icol].getValue() == -1) {
+						System.out.print("X"+genSpace(1));
+					}
+					else if (frappes[irow][icol].getValue() == -2){
+						System.out.print(ColorUtil.colorize("X", ColorUtil.Color.RED)+genSpace(1));
+					}
+					else {
+						System.out.print(ColorUtil.colorize("X", ColorUtil.Color.GREEN)+genSpace(1));
+					}
+				}
+				System.out.println();
+				i++;
+			}
+			System.out.println();
+		}
 	}
 
 	public boolean canPutShip(AbstractShip ship, Coords coords) {
@@ -263,4 +332,5 @@ public class Board implements IBoard {
 		}
 		else return Hit.fromInt(-1);
 	}
+
 }

@@ -40,7 +40,6 @@ public class BattleShipsAI implements Serializable {
 	/*
 	 * ** Constructeur
 	 */
-
 	/**
 	 *
 	 * @param myBoard       board where ships will be put.
@@ -117,9 +116,12 @@ public class BattleShipsAI implements Serializable {
 		if (lastStrike == null) {
 			res = pickRandomCoords();
 		}
-
+		while(opponent.getHit(res) != null) {
+			res = pickRandomCoords();
+		}
 		Hit hit = opponent.sendHit(res);
-		board.setHit(hit, res);
+//		System.out.println("Hit : ("+res.getX()+","+res.getY()+"), "+hit);
+		opponent.setHit(hit, res);
 
 		if (hit != Hit.MISS) {
 			if (lastStrike != null) {
