@@ -125,8 +125,11 @@ public class Board implements IBoard {
 				else if (frappes[irow][icol].getValue() == -1) {
 					System.out.print("X"+genSpace(1));
 				}
-				else {
+				else if (frappes[irow][icol].getValue() == -2){
 					System.out.print(ColorUtil.colorize("X", ColorUtil.Color.RED)+genSpace(1));
+				}
+				else {
+					System.out.print(ColorUtil.colorize("X", ColorUtil.Color.YELLOW)+genSpace(1));
 				}
 			}
 			System.out.println();
@@ -211,6 +214,7 @@ public class Board implements IBoard {
 			return (this.navires[coords.getX()][coords.getY()].getShip() != null);
 	}
 	
+	@Override
 	public boolean hasShip(AbstractShip ship, Coords coords) {
 		for (int isize=0; isize<ship.getLength(); isize++) {
 			Coords temp = new Coords(coords);
@@ -227,8 +231,8 @@ public class Board implements IBoard {
 		return false;
 	}
 	@Override
-	public void setHit(Hit hit, Coords coords) {
-		this.frappes[coords.getX()][coords.getY()] = hit;		
+	public void setHit(boolean hit, Coords coords) {
+		this.frappes[coords.getX()][coords.getY()] = hit?Hit.STRIKE:Hit.MISS;		
 	}
 	@Override
 	public Hit getHit(Coords coords) {
@@ -238,18 +242,24 @@ public class Board implements IBoard {
 	public Hit sendHit(Coords res) {
 		this.navires[res.getX()][res.getY()].addStrike();
 		if (this.navires[res.getX()][res.getY()].getShip()!=null) {
-			switch (this.navires[res.getX()][res.getY()].getShip().getLable()) {
-			case('B'):
-				return Hit.fromInt(4);
-			case('C'):
-				return Hit.fromInt(5);
-			case('D'):
-				return Hit.fromInt(2);
-			case('S'):
-				return Hit.fromInt(3);
-			default:
-				return Hit.fromInt(-2);
-			}		
+			if (this.navires[res.getX()][res.getY()].getShip().isSunk()) {
+				
+				switch (this.navires[res.getX()][res.getY()].getShip().getLable()) {
+				case('B'):
+					return Hit.fromInt(4);
+				case('C'):
+					return Hit.fromInt(5);
+				case('D'):
+					return Hit.fromInt(2);
+				case('S'):
+					return Hit.fromInt(3);
+				default:
+					return Hit.fromInt(-2);
+				}
+				
+			}
+			else return Hit.fromInt(-2);
+					
 		}
 		else return Hit.fromInt(-1);
 	}

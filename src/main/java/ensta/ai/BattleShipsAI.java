@@ -1,6 +1,7 @@
 package ensta.ai;
 
 import java.io.Serializable;
+import java.util.Random;
 
 import ensta.model.Coords;
 import ensta.model.Hit;
@@ -59,27 +60,28 @@ public class BattleShipsAI implements Serializable {
 	 * 
 	 * @param ships the ships to put
 	 */
-	/*
+	
 	public void putShips(AbstractShip ships[]) {
 		Coords coords;
 		Orientation orientation;
-		Orientation[] orientations = Orientation.values();
-
 		for (AbstractShip ship : ships) {
 			do {
-				// TODO use Random to pick a random x, y & orientation
-			} while (!board.canPutShip(ship, coords));
+				coords = Coords.randomCoords(board.getSize());
+				orientation = Orientation.randomOrientation();
+				ship.setOrientation(orientation);
+			} while (board.hasShip(ship, coords));
+			
 			board.putShip(ship, coords);
 		}
 	}
-	*/
+	
 
 	/**
 	 *
 	 * @param coords array must be of size 2. Will hold the coords of the send hit.
 	 * @return the status of the hit.
 	 */
-	/*
+	
 	public Hit sendHit(Coords coords) {
 		Coords res = null;
 		if (coords == null) {
@@ -129,7 +131,7 @@ public class BattleShipsAI implements Serializable {
 		coords.setCoords(res);
 		return hit;
 	}
-	*/
+	
 
 	/*
 	 * *** Méthodes privées
@@ -139,7 +141,7 @@ public class BattleShipsAI implements Serializable {
 		return lastStrike2.getX() == res.getY();
 	}
 	
-	/*
+	
 	private boolean isUndiscovered(Coords coords) {
 		return coords.isInBoard(board.getSize()) && board.getHit(coords) == null;
 	}
@@ -152,14 +154,14 @@ public class BattleShipsAI implements Serializable {
 
 		return coords;
 	}
-	*/
+	
 
 	/**
 	 * pick a coords verically around last known strike
 	 * 
 	 * @return suitable coords, or null if none is suitable
 	 */
-	/*
+	
 	private Coords pickVCoords() {
 		int x = lastStrike.getX();
 		int y = lastStrike.getY();
@@ -172,14 +174,14 @@ public class BattleShipsAI implements Serializable {
 		}
 		return null;
 	}
-	*/
+	
 
 	/**
 	 * pick a coords horizontally around last known strike
 	 * 
 	 * @return suitable coords, or null if none is suitable
 	 */
-	/*
+	
 	private Coords pickHCoords() {
 		int x = lastStrike.getX();
 		int y = lastStrike.getY();
@@ -192,6 +194,6 @@ public class BattleShipsAI implements Serializable {
 		}
 		return null;
 	}
-	*/
+	
 	
 }

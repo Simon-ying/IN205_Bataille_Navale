@@ -29,27 +29,27 @@ public class TestBoard {
 		
 		Coords HitCoords = new Coords(0,0);
 		Hit aHit = board.sendHit(HitCoords);
-		board.setHit(aHit, HitCoords);
+		board.setHit(aHit!=Hit.MISS, HitCoords);
 		board.print();
 		
 		HitCoords = new Coords(0,0);
 		aHit = board.sendHit(HitCoords);
-		board.setHit(aHit, HitCoords);
+		board.setHit(aHit!=Hit.MISS, HitCoords);
 		board.print();
 		
 		HitCoords = new Coords(0,1);
 		aHit = board.sendHit(HitCoords);
-		board.setHit(aHit, HitCoords);
+		board.setHit(aHit!=Hit.MISS, HitCoords);
 		board.print();
 		
 		HitCoords = new Coords(5,5);
 		aHit = board.sendHit(HitCoords);
-		board.setHit(aHit, HitCoords);
+		board.setHit(aHit!=Hit.MISS, HitCoords);
 		board.print();
 		
 		HitCoords = new Coords(4,2);
 		aHit = board.sendHit(HitCoords);
-		board.setHit(aHit, HitCoords);
+		board.setHit(aHit!=Hit.MISS, HitCoords);
 		board.print();
 //		System.out.print(ColorUtil.colorize("Hello World with COLOR!!!", ColorUtil.Color.RED));
 		
