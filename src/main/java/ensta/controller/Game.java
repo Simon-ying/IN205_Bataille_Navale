@@ -31,10 +31,8 @@ public class Game {
 	 */
 	private Player player1;
 	private Player player2;
-	private boolean isNultiplayer;
-//	private List<AbstractShip> ships1 = new ArrayList<>();
-//	private List<AbstractShip> ships2 = new ArrayList<>();
-	private Scanner sin;
+	private boolean isMultiplayer;
+	private Scanner sin = new Scanner(System.in);
 
 	/*
 	 * *** Constructeurs
@@ -44,25 +42,26 @@ public class Game {
 
 	public Game init() throws Exception {
 		if (!loadSave()) {
+			System.out.println("Do you want to play Muti-Payer Mode(y/n)?");
+			String input;
+			do {
+				input = sin.nextLine().toLowerCase();
+				System.out.println("Attention: only 'y' or 'n' are accepted." + input.charAt(0));
+			}while (input.charAt(0) != 'y' && input.charAt(0) != 'n');
+			this.isMultiplayer = input.charAt(0) == 'y';
 			// TODO init boards
 			Board b1 = new Board("player 1");
 			Board b2 = new Board("player 2");
-//			ships1.add(new Destroyer());
-//			ships1.add(new Submarine());
-//			ships1.add(new Submarine());
-//			ships1.add(new Battleship());
-//			ships1.add(new Carrier());
-//			ships2.add(new Destroyer());
-//			ships2.add(new Submarine());
-//			ships2.add(new Submarine());
-//			ships2.add(new Battleship());
-//			ships2.add(new Carrier());
 			// TODO init this.player1 & this.player2
 			this.player1 = new Player(b1, b2, createDefaultShips());
-			this.player2 = new PlayerAI(b2, b1, createDefaultShips());
+			if (this.isMultiplayer) {
+				this.player2 = new Player(b2, b1, createDefaultShips());
+			}
+			else
+				this.player2 = new PlayerAI(b2, b1, createDefaultShips());
 			// TODO place player ships
-			this.player2.putShips();
 			this.player1.putShips();
+			this.player2.putShips();
 		}
 		return this;
 	}
@@ -83,6 +82,7 @@ public class Game {
 			hit = player1.sendHit(coords); // TODO player1 send a hit
 			boolean strike = hit != Hit.MISS; // TODO set this hit on his board (b1)
 			b2.setHit(hit, coords);
+			System.out.println("Player 2: ");
 			b2.print(true);
 			done = updateScore();
 			
@@ -95,8 +95,12 @@ public class Game {
 					hit = player2.sendHit(coords); // TODO player2 send a hit.
 					b1.setHit(hit, coords);
 					strike = hit != Hit.MISS;
-					if (strike) {
+					if (strike && !this.isMultiplayer) {
 						b1.print();
+					}
+					if (this.isMultiplayer) {
+						System.out.println("Player 1: ");
+						b1.print(true);
 					}
 					System.out.println(makeHitMessage(true /* incoming hit */, coords, hit));
 					done = updateScore();
@@ -106,12 +110,16 @@ public class Game {
 					}
 				} while (strike && !done);
 			}
-			b1.print();
+			if (!this.isMultiplayer) {
+				System.out.println("Player 1: ");
+				b1.print();
+			}
+			
 		} while (!done);
 
 		SAVE_FILE.delete();
 		System.out.println(String.format("joueur %d gagne", player1.isLose() ? 2 : 1));
-//		sin.close();
+		sin.close();
 	}
 
 	private void save() {
