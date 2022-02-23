@@ -1,7 +1,12 @@
 package ensta.model;
+import java.io.Serializable;
+
 import ensta.model.ship.*;
-import ensta.util.ColorUtil;
-public class ShipState {
+public class ShipState implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private AbstractShip ship = null;
 	private boolean struck = false;
 	private boolean isEnd = false;

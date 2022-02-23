@@ -1,7 +1,15 @@
 package ensta.util;
-public class ColorUtil {
 
-    /* ***
+import java.io.Serializable;
+
+public class ColorUtil implements Serializable{
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/* ***
      * Constructeur de la classe ColorUtil, utilisable uniquement par la classe elle-même
      */
     private ColorUtil() {};

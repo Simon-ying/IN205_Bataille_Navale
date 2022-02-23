@@ -4,6 +4,10 @@ import ensta.util.Orientation;
 
 public class Battleship extends AbstractShip {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public Battleship(String name, Orientation o) {
 		super(name, 'B', 2, o);
 	}

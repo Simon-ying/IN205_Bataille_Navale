@@ -4,6 +4,10 @@ import ensta.util.Orientation;
 
 public class Destroyer extends AbstractShip{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public Destroyer(String name,Orientation o) {
 		super(name, 'D', 2, o);
 	}

@@ -1,13 +1,17 @@
 package ensta.model;
 
-import java.awt.Color;
+import java.io.Serializable;
 
 import ensta.model.ship.AbstractShip;
 import ensta.util.ColorUtil;
 import ensta.util.Orientation;
 
-public class Board implements IBoard {
+public class Board implements IBoard, Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static final int DEFAULT_SIZE = 10;
 	/* 
 	 * Atributs

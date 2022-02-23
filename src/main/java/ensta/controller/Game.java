@@ -1,8 +1,12 @@
 package ensta.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -20,7 +24,12 @@ import ensta.model.ship.Submarine;
 */
 import ensta.util.ColorUtil;
 import ensta.model.ship.*;
-public class Game {
+public class Game implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/*
 	 * *** Constante
 	 */
@@ -32,7 +41,6 @@ public class Game {
 	private Player player1;
 	private Player player2;
 	private boolean isMultiplayer;
-	private Scanner sin = new Scanner(System.in);
 
 	/*
 	 * *** Constructeurs
@@ -42,6 +50,7 @@ public class Game {
 
 	public Game init() throws Exception {
 		if (!loadSave()) {
+			Scanner sin = new Scanner(System.in);
 			System.out.println("Do you want to play Muti-Payer Mode(y/n)?");
 			String input;
 			do {
@@ -88,7 +97,7 @@ public class Game {
 			
 			System.out.println(makeHitMessage(false /* outgoing hit */, coords, hit));
 
-			// save();
+			 save();
 
 			if (!done && !strike) {
 				do {
@@ -106,7 +115,7 @@ public class Game {
 					done = updateScore();
 
 					if (!done) {
-//						save();
+						save();
 					}
 				} while (strike && !done);
 			}
@@ -119,33 +128,42 @@ public class Game {
 
 		SAVE_FILE.delete();
 		System.out.println(String.format("joueur %d gagne", player1.isLose() ? 2 : 1));
-		sin.close();
 	}
 
 	private void save() {
-//		try {
-//			// TODO bonus 2 : uncomment
-//			 if (!SAVE_FILE.exists()) {
-//			 SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
-//			 }
-//
-//			// TODO bonus 2 : serialize players
-//
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			// TODO bonus 2 : uncomment
+			if (!SAVE_FILE.exists()) {
+				SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
+			}
+			if (SAVE_FILE.exists()) {
+				SAVE_FILE.delete();
+			}
+
+			// TODO bonus 2 : serialize players
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SAVE_FILE.getAbsolutePath()));
+			oos.writeObject(this);
+			oos.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private boolean loadSave() {
-//		if (SAVE_FILE.exists()) {
-//			try {
-//				// TODO bonus 2 : deserialize players
-//
-//				return true;
-//			} catch (IOException | ClassNotFoundException e) {
-//				e.printStackTrace();
-//			}
-//		}
+		if (SAVE_FILE.exists()) {
+			try {
+				// TODO bonus 2 : deserialize players
+				ObjectInputStream ois=new ObjectInputStream(new FileInputStream(SAVE_FILE.getAbsolutePath()));
+				Game load = (Game)ois.readObject();
+				this.player1 = load.player1;
+				this.player2 = load.player2;
+				this.isMultiplayer = load.isMultiplayer;
+				return true;
+			} catch (IOException | ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
 		return false;
 	}
 	

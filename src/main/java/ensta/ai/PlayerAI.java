@@ -8,7 +8,11 @@ import ensta.model.Player;
 import ensta.model.ship.AbstractShip;
 
 public class PlayerAI extends Player {
-    /* **
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/* **
      * Attribut
      */
     private BattleShipsAI ai;

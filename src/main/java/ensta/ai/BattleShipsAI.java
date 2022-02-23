@@ -16,6 +16,11 @@ public class BattleShipsAI implements Serializable {
 	 */
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * My board. My ships have to be put on this one.
 	 */
 	private final IBoard board;
