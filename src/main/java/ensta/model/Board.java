@@ -62,40 +62,55 @@ public class Board implements IBoard {
 			}
 		}
 	}
-
-	public void print() {
-		System.out.println("Navires: ");
-		
+	private static String genSpace(int cst) throws Exception {
+		if (cst < 0) {
+			throw new Exception("Parameter must greater than 0");
+		}
+		String spaces = "";
+		for (int i=0; i<cst; i++) {
+			spaces += " ";
+		}
+		return spaces;
+	}
+	
+	public void print() throws Exception {
+		System.out.print("Navires: " + genSpace(5+2*size-"Navires: ".length()) + "Frappes: ");
+		System.out.println();
 		char c = 'A';
-		int i = 1;
-		System.out.print("   ");
+		int spaces = 0;
+		System.out.print(genSpace(3));
+		spaces += 3;
 		for (int icol=0; icol<size; icol++) {
-			System.out.print(c++ +" ");
+			System.out.print(c++ + genSpace(1));
+			spaces += 2;
 		}
-		System.out.println();
-		for (int irow=0; irow<size; irow++) {
-			System.out.print(i++ +((irow>8?" ":"  ")));
-			for (int icol=0; icol<size; icol++) {
-				System.out.print(navires[irow][icol]+" ");
-			}
-			System.out.println();
-		}
-		System.out.println();
-		System.out.println("Frappes: ");
+		// reset c = 'A'
 		c = 'A';
-		i = 1;
-		System.out.print("   ");
+		System.out.print(genSpace(5+2*size-spaces+3));
 		for (int icol=0; icol<size; icol++) {
-			System.out.print(c++ +" ");
+			System.out.print(c++ + genSpace(1));
 		}
+		
 		System.out.println();
+		
+		
+		int i = 1;
 		for (int irow=0; irow<size; irow++) {
-			System.out.print(i++ +((irow>8?" ":"  ")));
+			spaces = 0;
+			System.out.print(i +((irow>8?genSpace(1):genSpace(2))));
+			spaces += 3;
+			for (int icol=0; icol<size; icol++) {
+				System.out.print(navires[irow][icol]+genSpace(1));
+				spaces += 2;
+			}
+			System.out.print(genSpace(5+2*size-spaces) + i +((irow>8?genSpace(1):genSpace(2))));
 			for (int icol=0; icol<size; icol++) {
 				System.out.print((frappes[irow][icol]?'x':'.') + " ");
 			}
 			System.out.println();
+			i++;
 		}
+		System.out.println();
 	}
 
 	public boolean canPutShip(AbstractShip ship, Coords coords) {

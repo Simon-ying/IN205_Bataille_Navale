@@ -33,8 +33,9 @@ public class Player {
 	/**
 	 * Read keyboard input to get ships coordinates. Place ships on given
 	 * coodrinates.
+	 * @throws Exception 
 	 */
-	public void putShips() {
+	public void putShips() throws Exception {
 		boolean done = false;
 		int i = 0;
 

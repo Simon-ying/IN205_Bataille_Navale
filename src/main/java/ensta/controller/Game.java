@@ -54,7 +54,7 @@ public class Game {
 	/*
 	 * *** Méthodes
 	 */
-	public void run() {
+	public void run() throws Exception {
 		Coords coords = new Coords();
 		Board b1 = player1.getBoard();
 		Hit hit;
