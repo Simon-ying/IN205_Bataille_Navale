@@ -39,7 +39,7 @@ public abstract class AbstractShip {
 		this.strikeCount ++;
 	}
 	public boolean isSunk() {
-		if (this.strikeCount >= Math.max(1, this.length-4)) return true;
+		if (this.strikeCount >= Math.max(2, this.length-2)) return true;
 		else return false;
 	}
 

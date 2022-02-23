@@ -129,7 +129,7 @@ public class Board implements IBoard {
 					System.out.print(ColorUtil.colorize("X", ColorUtil.Color.RED)+genSpace(1));
 				}
 				else {
-					System.out.print(ColorUtil.colorize("X", ColorUtil.Color.YELLOW)+genSpace(1));
+					System.out.print(ColorUtil.colorize("X", ColorUtil.Color.GREEN)+genSpace(1));
 				}
 			}
 			System.out.println();
@@ -231,8 +231,8 @@ public class Board implements IBoard {
 		return false;
 	}
 	@Override
-	public void setHit(boolean hit, Coords coords) {
-		this.frappes[coords.getX()][coords.getY()] = hit?Hit.STRIKE:Hit.MISS;		
+	public void setHit(Hit hit, Coords coords) {
+		this.frappes[coords.getX()][coords.getY()] = hit;		
 	}
 	@Override
 	public Hit getHit(Coords coords) {
