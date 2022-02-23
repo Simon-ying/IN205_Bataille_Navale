@@ -1,6 +1,9 @@
 package ensta.model;
 
+import java.awt.Color;
+
 import ensta.model.ship.AbstractShip;
+import ensta.util.ColorUtil;
 import ensta.util.Orientation;
 
 public class Board implements IBoard {
@@ -24,8 +27,8 @@ public class Board implements IBoard {
 		return size;
 	}
 	
-	char[][] navires;
-	boolean[][] frappes; 
+	ShipState[][] navires;
+	Hit[][] frappes; 
 	
 	/*
 	 * Constructeurs
@@ -33,32 +36,32 @@ public class Board implements IBoard {
 	public Board(String name, int size){
 		this.name = name;
 		this.size = size;
-		navires = new char[size][size];
+		navires = new ShipState[size][size];
 		for (int irow=0; irow<size; irow++) {
 			for (int icol=0; icol<size; icol++) {
-				navires[irow][icol] = '.';
+				navires[irow][icol] = new ShipState();
 			}
 		}
-		frappes = new boolean[size][size];
+		frappes = new Hit[size][size];
 		for (int irow=0; irow<size; irow++) {
 			for (int icol=0; icol<size; icol++) {
-				frappes[irow][icol] = false;
+				frappes[irow][icol] = null;
 			}
 		}
 	}
 	public Board(String name) {
 		this.name = name;
 		this.size = DEFAULT_SIZE;
-		navires = new char[size][size];
+		navires = new ShipState[size][size];
 		for (int irow=0; irow<size; irow++) {
 			for (int icol=0; icol<size; icol++) {
-				navires[irow][icol] = '.';
+				navires[irow][icol] = new ShipState();
 			}
 		}
-		frappes = new boolean[size][size];
+		frappes = new Hit[size][size];
 		for (int irow=0; irow<size; irow++) {
 			for (int icol=0; icol<size; icol++) {
-				frappes[irow][icol] = false;
+				frappes[irow][icol] = null;
 			}
 		}
 	}
@@ -100,12 +103,28 @@ public class Board implements IBoard {
 			System.out.print(i +((irow>8?genSpace(1):genSpace(2))));
 			spaces += 3;
 			for (int icol=0; icol<size; icol++) {
-				System.out.print(navires[irow][icol]+genSpace(1));
+				if (navires[irow][icol].getShip()==null) {
+					System.out.print("."+genSpace(1));
+				}
+				else if (navires[irow][icol].getShip()!=null && navires[irow][icol].getEnd()){
+					System.out.print(ColorUtil.colorize(navires[irow][icol].getShip().getLable(), ColorUtil.Color.RED)+genSpace(1));
+				}
+				else {
+					System.out.print(navires[irow][icol].getShip().getLable()+genSpace(1));
+				}
 				spaces += 2;
 			}
 			System.out.print(genSpace(5+2*size-spaces) + i +((irow>8?genSpace(1):genSpace(2))));
 			for (int icol=0; icol<size; icol++) {
-				System.out.print((frappes[irow][icol]?'x':'.') + " ");
+				if (frappes[irow][icol]==null) {
+					System.out.print("."+genSpace(1));
+				}
+				else if (frappes[irow][icol].getValue() == -1) {
+					System.out.print("X"+genSpace(1));
+				}
+				else {
+					System.out.print(ColorUtil.colorize("X", ColorUtil.Color.RED)+genSpace(1));
+				}
 			}
 			System.out.println();
 			i++;
@@ -169,15 +188,14 @@ public class Board implements IBoard {
 				switch (ship.getOrientation()) {
 				case NORTH:
 				case SOUTH:
-					this.navires[coords.getX() + ship.getOrientation().getIncrement()*isize][coords.getY()] 
-							= ship.getLable();
+					this.navires[coords.getX() + ship.getOrientation().getIncrement()*isize][coords.getY()].setShip(ship);
 					break;
 				default:
-					this.navires[coords.getX()][coords.getY() + ship.getOrientation().getIncrement()*isize] 
-							= ship.getLable();
+					this.navires[coords.getX()][coords.getY() + ship.getOrientation().getIncrement()*isize].setShip(ship);
 				}
 				
 			}
+			this.navires[coords.getX()][coords.getY()].setEnd(true);
 			return true;
 		}
 	}
@@ -188,7 +206,7 @@ public class Board implements IBoard {
 				coords.getX() >= 0 &&
 				coords.getY() >= 0)) return true;
 		else
-			return (this.navires[coords.getX()][coords.getY()] != '.');
+			return (this.navires[coords.getX()][coords.getY()].getShip() != null);
 	}
 	
 	public boolean hasShip(AbstractShip ship, Coords coords) {
@@ -207,16 +225,16 @@ public class Board implements IBoard {
 		return false;
 	}
 	@Override
-	public void setHit(boolean hit, Coords coords) {
+	public void setHit(Hit hit, Coords coords) {
 		this.frappes[coords.getX()][coords.getY()] = hit;		
 	}
 	@Override
-	public Boolean getHit(Coords coords) {
+	public Hit getHit(Coords coords) {
 		return this.frappes[coords.getX()][coords.getY()];
 	}
 	@Override
 	public Hit sendHit(Coords res) {
-		switch (this.navires[res.getX()][res.getY()]) {
+		switch (this.navires[res.getX()][res.getY()].getShip().getLable()) {
 			case 'B':
 				return Hit.fromInt(4);
 			case 'C':

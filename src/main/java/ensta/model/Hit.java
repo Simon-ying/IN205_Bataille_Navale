@@ -38,4 +38,8 @@ public enum Hit {
     public String toString() {
         return this.label;
     }
+    
+    public int getValue() {
+    	return value;
+    }
 };

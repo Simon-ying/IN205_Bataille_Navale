@@ -6,6 +6,7 @@ public abstract class AbstractShip {
 	private String name;
 	private Orientation o;
 	private int length;
+	private int strikeCount = 0;
 	
 	public AbstractShip(String name, char lable, int length, Orientation o) {
 		this.name = name;
@@ -33,6 +34,13 @@ public abstract class AbstractShip {
 	public char getLable() {
 		return lable;
 	}
-	protected abstract boolean isSunk();
+	
+	public void addStrike() {
+		this.strikeCount ++;
+	}
+	protected boolean isSunk() {
+		if (this.strikeCount == this.length) return true;
+		else return false;
+	}
 
 }
