@@ -107,6 +107,9 @@ public class Board implements IBoard {
 					System.out.print("."+genSpace(1));
 				}
 				else if (navires[irow][icol].getShip()!=null && navires[irow][icol].getEnd()){
+					System.out.print(ColorUtil.colorize(navires[irow][icol].getShip().getLable(), ColorUtil.Color.YELLOW)+genSpace(1));
+				}
+				else if (navires[irow][icol].getShip()!=null && navires[irow][icol].getShip().isSunk()){
 					System.out.print(ColorUtil.colorize(navires[irow][icol].getShip().getLable(), ColorUtil.Color.RED)+genSpace(1));
 				}
 				else {
@@ -171,7 +174,6 @@ public class Board implements IBoard {
 	}
 	
 	/*
-	 * a implementer
 	 * coordonnee
 	 * --y
 	 * |
@@ -234,17 +236,21 @@ public class Board implements IBoard {
 	}
 	@Override
 	public Hit sendHit(Coords res) {
-		switch (this.navires[res.getX()][res.getY()].getShip().getLable()) {
-			case 'B':
+		this.navires[res.getX()][res.getY()].addStrike();
+		if (this.navires[res.getX()][res.getY()].getShip()!=null) {
+			switch (this.navires[res.getX()][res.getY()].getShip().getLable()) {
+			case('B'):
 				return Hit.fromInt(4);
-			case 'C':
+			case('C'):
 				return Hit.fromInt(5);
-			case 'D':
+			case('D'):
 				return Hit.fromInt(2);
-			case 'S':
+			case('S'):
 				return Hit.fromInt(3);
 			default:
-				return Hit.fromInt(-1);
+				return Hit.fromInt(-2);
+			}		
 		}
+		else return Hit.fromInt(-1);
 	}
 }

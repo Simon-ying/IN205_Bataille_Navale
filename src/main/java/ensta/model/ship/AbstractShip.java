@@ -38,7 +38,7 @@ public abstract class AbstractShip {
 	public void addStrike() {
 		this.strikeCount ++;
 	}
-	protected boolean isSunk() {
+	public boolean isSunk() {
 		if (this.strikeCount == this.length) return true;
 		else return false;
 	}

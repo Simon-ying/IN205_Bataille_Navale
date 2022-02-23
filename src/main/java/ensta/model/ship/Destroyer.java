@@ -15,11 +15,4 @@ public class Destroyer extends AbstractShip{
 	}
 
 
-	@Override
-	protected boolean isSunk() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-
 }

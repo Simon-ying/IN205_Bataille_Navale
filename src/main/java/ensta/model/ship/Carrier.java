@@ -14,10 +14,5 @@ public class Carrier extends AbstractShip{
 		super("Default_Carrier", 'C', 5, Orientation.EAST);
 	}
 
-	@Override
-	protected boolean isSunk() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 }

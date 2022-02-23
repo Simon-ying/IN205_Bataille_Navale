@@ -14,10 +14,4 @@ public class Submarine extends AbstractShip {
 		super("Default_Submarine", 'S', 3, Orientation.EAST);
 	}
 
-	@Override
-	protected boolean isSunk() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }
